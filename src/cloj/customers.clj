@@ -1,4 +1,4 @@
-(ns cloj.customer
+(ns cloj.customers
   (:require [clojure.data.json :as json]
             [org.httpkit.client :as http]))
 
@@ -29,12 +29,21 @@
           :let [email-list (customer :email)]] email-list)))
 
 
-(defn lookup-address [lat-long]
+(defn- lookup-address [lat-long]
   (let [{:keys [body error]} @(http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})]
     (if error
       (println "Failed, exception: " error)
       (let [results ((json/read-json body) :results)]
         ((nth results 0) :formatted_address)))))
+
+(defn- get-address [customer]
+  (lookup-address (str (customer :latitude) "," (customer :longitude))))
+
+(defn customers-address-list [customers]
+  (json/write-str
+    (for [customer customers
+          :let [address (get-address customer)]]
+      (assoc customer :address address))))
 
 
 
