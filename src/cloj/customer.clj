@@ -36,8 +36,7 @@
       (let [results ((json/read-json body) :results)]
         ((nth results 0) :formatted_address)))))
 
-;(defn populate-customer-address
-;  [data]
-;  (for [customer data]
-;    )
-;)
+
+
+
+
