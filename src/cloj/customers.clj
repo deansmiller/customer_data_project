@@ -18,9 +18,11 @@
           :let [colour-map {(keyword colour) (count(get-by-eye-colour colour data))}]]
       colour-map)))
 
+
 (defn most-popular-eye-colour
   [colours data]
   (name (key (apply max-key val (eye-colour-map colours data)))))
+
 
 (defn sorted-email-list
   [data]
@@ -29,15 +31,16 @@
           :let [email-list (customer :email)]] email-list)))
 
 
+; TODO error handling?!
 (defn- lookup-address [lat-long]
-  (let [{:keys [body error]} @(http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})]
-    (if error
-      (println "Failed, exception: " error)
-      (let [results ((json/read-json body) :results)]
-        ((nth results 0) :formatted_address)))))
+  (let [{:keys [body]} @(http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})]
+      (let [result (nth ((json/read-json body) :results) 0)]
+        (result :formatted_address))))
 
 (defn- get-address [customer]
   (lookup-address (str (customer :latitude) "," (customer :longitude))))
+
+
 
 (defn customers-address-list [customers]
   (json/write-str
