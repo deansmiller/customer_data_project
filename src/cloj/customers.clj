@@ -33,12 +33,18 @@
 
 ; TODO error handling?!
 (defn- lookup-address [lat-long]
-  (let [{:keys [body]} @(http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})]
-      (let [result (nth ((json/read-json body) :results) 0)]
-        (result :formatted_address))))
+  (let [{:keys [body error]} @(http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})]
+    (if error
+      (println "fuck up")
+      (let [result ((json/read-json body) :results)]
+          ((first result) :formatted_address)
+        ))))
 
 (defn- get-address [customer]
-  (lookup-address (str (customer :latitude) "," (customer :longitude))))
+  (if customer
+    (lookup-address (str (customer :latitude) "," (customer :longitude)))
+    (println "fuck upx"))
+  )
 
 
 

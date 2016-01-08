@@ -1,7 +1,8 @@
 (ns cloj.core
   (:gen-class)
   (:require [clojure.data.json :as json])
-  (:require [cloj.customers :as customers]))
+  (:require [cloj.customers :as customers])
+  (:require [clojure.core.async :refer [chan >! <! go <!!]]))
 
 
 (def customers-list (json/read-json (slurp "resources/data.json")))
@@ -18,5 +19,7 @@
 
 ;(spit "resources/output.json" (customers/customers-address-list customers-list))
 
-(println (customers/customers-address-list customers-list))
+;(prn (count customers-list))
+(def c (customers/customers-address-list customers-list))
+;(println (count (customers/customers-address-list customers-list)))
 
