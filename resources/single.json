@@ -1,0 +1,60 @@
+[
+  {
+    "_id": "5411823ebfcb9f92308790a3",
+    "index": 0,
+    "guid": "83edb4f4-922b-4aa2-8dcf-e385e22fdb20",
+    "isActive": true,
+    "balance": "$1,773.53",
+    "picture": "http://placehold.it/32x32",
+    "age": 23,
+    "eyeColor": "blue",
+    "name": {
+      "first": "Whitley",
+      "last": "Webb"
+    },
+    "company": "INFOTRIPS",
+    "email": "whitley.webb@infotrips.biz",
+    "phone": "+1 (827) 470-2583",
+    "about": "Labore duis id nulla exercitation cillum Lorem tempor aliqua aute ipsum veniam incididunt dolor culpa. Nostrud id dolore consectetur esse quis. Labore minim eu do consectetur reprehenderit occaecat ut sunt tempor aliqua dolor id laboris. Velit eu velit ipsum elit veniam eiusmod fugiat dolore qui ad. Ea ea do et cupidatat aliquip incididunt.\r\n",
+    "registered": "Thursday, April 24, 2014 12:09 AM",
+    "latitude": 47.544000,
+    "longitude": -53.285009,
+    "tags": [
+      "laborum",
+      "sunt",
+      "id",
+      "sunt",
+      "voluptate",
+      "irure",
+      "culpa"
+    ],
+    "range": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Lyons Dorsey"
+      },
+      {
+        "id": 1,
+        "name": "Graves Parsons"
+      },
+      {
+        "id": 2,
+        "name": "Marcy Leach"
+      }
+    ],
+    "greeting": "Hello, Whitley! You have 7 unread messages.",
+    "favoriteFruit": "banana"
+  }
+]
