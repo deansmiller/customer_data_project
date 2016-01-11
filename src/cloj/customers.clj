@@ -32,6 +32,7 @@
 
 
 ;; http://www.nurkiewicz.com/2013/03/promises-and-futures-in-clojure.html
+;; http://www.http-kit.org/client.html
 (defn- lookup-address [lat-long]
     (def response (future (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})))
     (let [{:keys [body]} response]
