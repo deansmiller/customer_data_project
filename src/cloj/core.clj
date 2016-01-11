@@ -1,11 +1,13 @@
 (ns cloj.core
   (:gen-class)
-  (:require [cloj.customers :as customers])
-  (:require [clojure.data.json :as json])
-  (:require [clojure.core.async :refer [chan >! <! go <!!]]))
+  (:require [cloj.customers :as customers]
+            [clj-http.client :as http]
+            [clojure.data.json :as json])
+            )
 
+;[clojure.core.async :refer [chan >! <! go <!!]]
 
-(def customers-list (json/read-json (slurp "resources/single.json")))
+(def customers-list (json/read-json (slurp "resources/data.json")))
 
 ;(def eye-colours ["brown", "blue", "green"])
 ;(println "Most popular eye-colour is:" (customers/most-popular-eye-colour eye-colours customers-list))
@@ -22,5 +24,13 @@
 ;(prn (count customers-list))
 
 
-(println (customers/customers-address-list customers-list))
+(defn -main []
+
+      (doall
+        (customers/customers-address-list customers-list))
+
+  (shutdown-agents)
+)
+
+
 
