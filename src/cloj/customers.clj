@@ -31,13 +31,13 @@
           :let [email-list (customer :email)]] email-list)))
 
 
-;; http://www.nurkiewicz.com/2013/03/promises-and-futures-in-clojure.html
-;; http://www.http-kit.org/client.html
 (defn- lookup-address [lat-long]
     (def response (future (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})))
-    (let [{:keys [body]} response]
-      ((first
-         ((json/read-json body) :results)) :formatted_address)))
+    (let [{:keys [body]} @response]
+      (let [result (first ((json/read-json body) :results))]
+        (if result
+            (result :formatted_address)
+            (println (str "Unable to lookup-address for: " lat-long))))))
 
 
 
@@ -49,4 +49,4 @@
 (defn customers-address-list [customers]
     (for [customer customers
           :let [address (get-address customer)]]
-      (println address)))
+      (assoc customer :address address)))
