@@ -2,8 +2,7 @@
   (:gen-class)
   (:require [cloj.customers :as customers]
             [clj-http.client :as http]
-            [clojure.data.json :as json])
-            )
+            [clojure.data.json :as json]))
 
 ;[clojure.core.async :refer [chan >! <! go <!!]]
 

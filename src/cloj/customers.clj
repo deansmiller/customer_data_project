@@ -5,6 +5,8 @@
 (def api-key "AIzaSyCIYs-qaMVQSmRU5qt9Nc_7vhSj8zWnmro")
 (def geo-api-url "https://maps.googleapis.com/maps/api/geocode/json")
 
+(def retries [])
+
 (defn- get-by-eye-colour
   "Return customers with a specified eye-colour"
   [colour data]
@@ -37,7 +39,9 @@
       (let [result (first ((json/read-json body) :results))]
         (if result
             (result :formatted_address)
-            (println (str "Unable to lookup-address for: " lat-long))))))
+
+
+            ))))
 
 
 
