@@ -28,4 +28,5 @@
     (spit "resources/output.json" (json/write-str
         (doall (customers/customers-address-list customers-list))))
 
+
   (shutdown-agents))

@@ -36,12 +36,16 @@
 (defn- lookup-address [lat-long]
     (def response (future (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})))
     (let [{:keys [body]} @response]
-      (let [result (first ((json/read-json body) :results))]
-        (if result
-            (result :formatted_address)
-
-
-            ))))
+      (let [result (first ((json/read-json body) :results))
+            err ((json/read-json body) :error_message)]
+        (if-not err
+          (do
+            (println (result :formatted_address))
+            (result :formatted_address))
+          (do
+            (println (str "Unable to lookup address for: " lat-long ". Reason: " err))
+            ;return null
+            "NULL")))))
 
 
 
@@ -54,3 +58,4 @@
     (for [customer customers
           :let [address (get-address customer)]]
       (assoc customer :address address)))
+
