@@ -2,11 +2,13 @@
   (:gen-class)
   (:require [cloj.customers :as customers]
             [clj-http.client :as http]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [cloj.mock :as mock]))
 
 ;[clojure.core.async :refer [chan >! <! go <!!]]
 
 (def customers-list (json/read-json (slurp "resources/data.json")))
+
 
 ;(def eye-colours ["brown", "blue", "green"])
 ;(println "Most popular eye-colour is:" (customers/most-popular-eye-colour eye-colours customers-list))
@@ -25,7 +27,12 @@
 
 (defn -main []
 
-    (spit "resources/output.json" (json/write-str
-        (doall (customers/customers-address-list customers-list))))
+  (prn (customers/find-customers "m" customers-list))
 
-  (shutdown-agents))
+
+   ; (spit "resources/output.json" (json/write-str
+   ;     (doall (mock/customers-address-list customers-list))))
+  ;
+  ;(shutdown-agents)
+
+  )

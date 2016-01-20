@@ -5,7 +5,6 @@
 (def api-key "AIzaSyCIYs-qaMVQSmRU5qt9Nc_7vhSj8zWnmro")
 (def geo-api-url "https://maps.googleapis.com/maps/api/geocode/json")
 
-(def retries [])
 
 (defn- get-by-eye-colour
   "Return customers with a specified eye-colour"
@@ -54,3 +53,18 @@
     (for [customer customers
           :let [address (get-address customer)]]
       (assoc customer :address address)))
+
+
+
+(defn find-customers
+    "Find a customer bya letter in their name"
+    [letter customers]
+    (let [names (map :name customers)
+        first-names (map :first names)
+          matches []]
+      (for [first-name first-names]
+         (if (> (.indexOf first-name letter) -1)
+             (conj matches first-name)
+         )
+
+    )))
