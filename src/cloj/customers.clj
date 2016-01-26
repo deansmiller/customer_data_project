@@ -12,12 +12,12 @@
   (filter #(= (:eyeColor %) colour) data))
 
 (defn- eye-colour-map
-  "Determine which eye-colour (brown, blue or green) is the most popular"
-  [colours data]
-  (into {}
-    (for [colour colours
-          :let [colour-map {(keyword colour) (count(get-by-eye-colour colour data))}]]
-      colour-map)))
+    "Determine which eye-colour (brown, blue or green) is the most popular"
+    [colours data]
+    (into {}
+      (for [colour colours
+            :let [colour-map {(keyword colour) (count(get-by-eye-colour colour data))}]]
+        colour-map)))
 
 
 (defn most-popular-eye-colour
@@ -26,10 +26,10 @@
 
 
 (defn sorted-email-list
-  [data]
-  (into []
-    (for [customer (sort-by :email data)
-          :let [email-list (customer :email)]] email-list)))
+    [data]
+    (into []
+      (for [customer (sort-by :email data)
+            :let [email-list (customer :email)]] email-list)))
 
 
 (defn- lookup-address [lat-long]
@@ -39,10 +39,9 @@
     (Thread/sleep 100)
     (def response (future (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})))
     (let [{:keys [body]} @response]
-      (let [result (first ((json/read-json body) :results))]
-        (if result
-            (result :formatted_address)))))
-
+        (let [result (first ((json/read-json body) :results))]
+            (if result
+                (result :formatted_address)))))
 
 
 
