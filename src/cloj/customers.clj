@@ -33,14 +33,16 @@
 
 
 (defn- lookup-address [lat-long]
+    ;; Because the Geocoding API limit is 10 req per second
+    ;; sometimes running the app exceded that
+    ;; removing this sleep and the request returns a "OVER_QUERY_LIMIT" status
+    (Thread/sleep 100)
     (def response (future (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})))
     (let [{:keys [body]} @response]
       (let [result (first ((json/read-json body) :results))]
         (if result
-            (result :formatted_address)
+            (result :formatted_address)))))
 
-
-            ))))
 
 
 
@@ -60,11 +62,8 @@
     "Find a customer bya letter in their name"
     [letter customers]
     (let [names (map :name customers)
-        first-names (map :first names)
+          first-names (map :first names)
           matches []]
       (for [first-name first-names]
          (if (> (.indexOf first-name letter) -1)
-             (conj matches first-name)
-         )
-
-    )))
+             (conj matches first-name)))))
