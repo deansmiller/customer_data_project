@@ -1,36 +1,29 @@
 (ns cloj.customers
   (:require [clojure.data.json :as json]
-            [clj-http.client :as http]))
+            [clj-http.client :as http]
+            [cloj.utils :as utils]))
+
+(import '(java.util.concurrent Executors))
 
 (def api-key "AIzaSyCIYs-qaMVQSmRU5qt9Nc_7vhSj8zWnmro")
 (def geo-api-url "https://maps.googleapis.com/maps/api/geocode/json")
 
 
-(defn- get-by-eye-colour
-  "Return customers with a specified eye-colour"
-  [colour data]
-  (filter #(= (:eyeColor %) colour) data))
-
-(defn- eye-colour-map
-    "Determine which eye-colour (brown, blue or green) is the most popular"
-    [colours data]
-    (into {}
-      (for [colour colours
-            :let [colour-map {(keyword colour) (count(get-by-eye-colour colour data))}]]
-        colour-map)))
+(def pool (Executors/newFixedThreadPool 10))
 
 
-(defn most-popular-eye-colour
-  [colours data]
-  (name (key (apply max-key val (eye-colour-map colours data)))))
+(defn address-lookup 
+  [customer]
+    (for [lat-long (str (customer :latitude) "," (customer :longitude))]
+      (http/get geo-api-url {:query-params {:latlng lat-long :api-key api-key}})
+      ))
+
+      
+    
 
 
-(defn sorted-email-list
-    [data]
-    (into []
-      (for [customer (sort-by :email data)
-            :let [email-list (customer :email)]] email-list)))
 
+; private methods
 
 (defn- lookup-address [lat-long]
     ;; Because the Geocoding API limit is 10 req per second
@@ -48,6 +41,32 @@
 (defn- get-address [customer]
     (lookup-address (str (customer :latitude) "," (customer :longitude))))
 
+(defn- get-by-eye-colour
+  "Return customers with a specified eye-colour"
+  [colour data]
+  (filter #(= (:eyeColor %) colour) data))
+
+(defn- eye-colour-map
+    "Determine which eye-colour (brown, blue or green) is the most popular"
+    [colours data]
+    (into {}
+      (for [colour colours
+            :let [colour-map {(keyword colour) (count(get-by-eye-colour colour data))}]]
+        colour-map)))
+
+
+; public methods
+
+(defn most-popular-eye-colour
+  [colours data]
+  (name (key (apply max-key val (eye-colour-map colours data)))))
+
+
+(defn sorted-email-list
+    [data]
+    (into []
+      (for [customer (sort-by :email data)
+            :let [email-list (customer :email)]] email-list)))
 
 
 (defn customers-address-list [customers]
@@ -56,13 +75,19 @@
       (assoc customer :address address)))
 
 
+(defn- get-location
+  "Given a customer, returns the customers lat and long data"
+    [customer]
+    {:long (customer :longitude) :lat (customer :latitude)})
 
-(defn find-customers
-    "Find a customer bya letter in their name"
-    [letter customers]
-    (let [names (map :name customers)
-          first-names (map :first names)
-          matches []]
-      (for [first-name first-names]
-         (if (> (.indexOf first-name letter) -1)
-             (conj matches first-name)))))
+(defn get-distances
+  "Given a customer and a list of customers. Returns a lazy sequence of distances between each customer"
+    [_customer customers]
+    (for [customer customers :let [location {:long (customer :longitude) :lat (customer :latitude)}]]
+        {:customer (customer :name) :distance (utils/haversine (get-location _customer) location)}))
+
+(defn get-closest-customer
+  "Takes a customer and a list of customers. Determines the distances between the customer and the others"
+    [customer customers]
+    ; Order by closest customers, second because the first customer is the entered
+    (second (sort-by :distance (get-distances customer customers))))

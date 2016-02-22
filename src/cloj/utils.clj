@@ -2,7 +2,7 @@
 
 ;http://rosettacode.org/wiki/Haversine_formula#Clojure
 (defn haversine
-  [{lon1 :longitude lat1 :latitude} {lon2 :longitude lat2 :latitude}]
+  [{lon1 :long lat1 :lat} {lon2 :long lat2 :lat}]
   (let [R 6372.8 ; kilometers
         dlat (Math/toRadians (- lat2 lat1))
         dlon (Math/toRadians (- lon2 lon1))
